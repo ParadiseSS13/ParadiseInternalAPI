@@ -18,6 +18,11 @@ namespace ParadiseInternalAPI {
         public void ConfigureServices(IServiceCollection services) {
             services.AddDbContext<paradise_gamedbContext>(options => options.UseMySql(Configuration.GetConnectionString("GameDB"), ServerVersion.Parse("10.3.31-mariadb")));
             services.AddControllers();
+            services.AddMvc(options => {
+                options.EnableEndpointRouting = false;
+                options.ReturnHttpNotAcceptable = true;
+                options.RespectBrowserAcceptHeader = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -26,12 +31,8 @@ namespace ParadiseInternalAPI {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRouting();
+            app.UseMvc();
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => {
-                endpoints.MapControllers();
-            });
         }
     }
 }
